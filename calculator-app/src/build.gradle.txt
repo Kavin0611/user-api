@@ -1,0 +1,27 @@
+Set-Content build.gradle @"
+plugins {
+    id 'java'
+    id 'application'
+}
+
+group 'com.example'
+version '1.0'
+
+sourceCompatibility = '11'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.1'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+application {
+    mainClassName = 'Calculator'
+}
+"@
