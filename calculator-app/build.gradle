@@ -14,10 +14,15 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter'
 }
 
+task wrapper(type: Wrapper) {
+    gradleVersion = '8.13'
+}
+
 publishing {
     publications {
         mavenJava(MavenPublication) {
             from components.java
+            artifactId = 'calculator-app' // Specify the artifact name
         }
     }
     repositories {
