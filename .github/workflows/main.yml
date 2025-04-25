@@ -37,9 +37,10 @@ jobs:
     - name: Run tests with Gradle
       run: ./gradlew test --no-daemon
 
-    # Step 6: Publish Gradle artifacts (Optional, if you want to publish the artifacts)
+    # Step 6: Publish Gradle artifacts
     - name: Publish Gradle artifacts
-      run: ./gradlew publish
+      run: ./gradlew publish --no-daemon
       env:
         GRADLE_PUBLISH_KEY: ${{ secrets.GRADLE_PUBLISH_KEY }}
         GRADLE_PUBLISH_SECRET: ${{ secrets.GRADLE_PUBLISH_SECRET }}
+        GRADLE_DISTRIBUTION: 'path/to/your/distribution'  # Ensure this points to your distribution path if required
