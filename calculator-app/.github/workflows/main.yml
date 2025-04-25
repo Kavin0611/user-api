@@ -1,34 +1,23 @@
-name: Java CI with Gradle
+name: CI/CD Pipeline
 
 on:
   push:
-    branches:
-      - main
-  pull_request:
     branches:
       - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    
     steps:
-    # Check out the repository
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
-    # Make gradlew executable (necessary for Linux runners)
-    - name: Make gradlew executable
-      run: chmod +x gradlew
-
-    # Set up JDK 11
-    - name: Set up JDK 11
+    - name: Set up JDK
       uses: actions/setup-java@v2
       with:
-        java-version: '11'
-        distribution: 'adoptopenjdk'
+        java-version: '11'  # You can change this based on your project's requirements
 
-    # Cache Gradle dependencies
     - name: Cache Gradle dependencies
       uses: actions/cache@v2
       with:
@@ -37,12 +26,11 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-gradle-
 
-    # Build the project using Gradle
     - name: Build with Gradle
-      run: ./gradlew build
-      working-directory: ./calculator-app
+      run: ./gradlew build --no-daemon
 
-    # Run tests (optional, based on your project)
-    - name: Run tests
-      run: ./gradlew test
-      working-directory: ./calculator-app
+    - name: Publish Gradle artifacts
+      run: ./gradlew publish
+      env:
+        GRADLE_PUBLISH_KEY: ${{ secrets.GRADLE_PUBLISH_KEY }}
+        GRADLE_PUBLISH_SECRET: ${{ secrets.GRADLE_PUBLISH_SECRET }}
