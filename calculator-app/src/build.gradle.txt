@@ -1,27 +1,37 @@
-Set-Content build.gradle @"
 plugins {
     id 'java'
-    id 'application'
+    id 'maven-publish'
 }
 
-group 'com.example'
-version '1.0'
-
-sourceCompatibility = '11'
+group = 'com.example'
+version = '1.0.0'
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.1'
+    implementation 'org.springframework.boot:spring-boot-starter'
 }
 
-test {
-    useJUnitPlatform()
+task wrapper(type: Wrapper) {
+    gradleVersion = '8.13'
 }
 
-application {
-    mainClassName = 'Calculator'
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            artifactId = 'calculator-app' // Specify the artifact name
+        }
+    }
+    repositories {
+        maven {
+            url = uri("https://your-repository-url.com/releases")  // Replace with your actual repository URL
+            credentials {
+                username = project.findProperty("repoUser") ?: System.getenv("REPO_USER")
+                password = project.findProperty("repoPassword") ?: System.getenv("REPO_PASSWORD")
+            }
+        }
+    }
 }
-"@
