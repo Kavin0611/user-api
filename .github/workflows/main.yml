@@ -8,7 +8,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
@@ -16,10 +16,19 @@ jobs:
     - name: Set up JDK
       uses: actions/setup-java@v2
       with:
-        java-version: '11'
+        java-version: '11'  # The version of Java you want
+        java-package: jdk    # Install JDK (Java Development Kit)
+        architecture: x64    # Specify architecture, x64 or x32
+        distribution: 'adoptopenjdk'  # Distribution (can be 'adoptopenjdk', 'zulu', 'openjdk', etc.)
+        check-latest: false  # Optional, controls if you want the latest version
+        server-id: github
+        server-username: GITHUB_ACTOR
+        server-password: GITHUB_TOKEN
+        overwrite-settings: true
+        job-status: success
 
     - name: Cache Gradle dependencies
-      uses: actions/cache@v3
+      uses: actions/cache@v2
       with:
         path: ~/.gradle/caches
         key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
@@ -29,11 +38,8 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew build --no-daemon
 
-    - name: Run tests with Gradle (Optional)
-      run: ./gradlew test --no-daemon
-
     - name: Publish Gradle artifacts
-      run: ./gradlew publish --no-daemon
+      run: ./gradlew publish
       env:
         GRADLE_PUBLISH_KEY: ${{ secrets.GRADLE_PUBLISH_KEY }}
         GRADLE_PUBLISH_SECRET: ${{ secrets.GRADLE_PUBLISH_SECRET }}
