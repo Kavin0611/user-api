@@ -7,17 +7,20 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-    
+    runs-on: ubuntu-latest  # You can use other OS runners if needed
+
     steps:
+    # Step 1: Checkout the code from the repository
     - name: Checkout code
       uses: actions/checkout@v3
 
+    # Step 2: Set up Java environment
     - name: Set up JDK
       uses: actions/setup-java@v2
       with:
-        java-version: '11'  # You can change this based on your project's requirements
+        java-version: '11'  # You can change this based on your project requirements
 
+    # Step 3: Cache Gradle dependencies to speed up the build
     - name: Cache Gradle dependencies
       uses: actions/cache@v2
       with:
@@ -26,9 +29,15 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-gradle-
 
+    # Step 4: Build with Gradle
     - name: Build with Gradle
       run: ./gradlew build --no-daemon
 
+    # Step 5: Run tests with Gradle (Optional but recommended)
+    - name: Run tests with Gradle
+      run: ./gradlew test --no-daemon
+
+    # Step 6: Publish Gradle artifacts (Optional, if you want to publish the artifacts)
     - name: Publish Gradle artifacts
       run: ./gradlew publish
       env:
